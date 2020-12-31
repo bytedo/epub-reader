@@ -1,0 +1,44 @@
+{
+  "name": "org.bytedo.epub",
+  "version": "2.1.2",
+  "description": "E-pub Reader",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder",
+    "pack:mac": "electron-builder --mac"
+  },
+  "author": {
+    "name": "yutent",
+    "email": "yutent.io@gmail.com"
+  },
+  "homepage": "https://yutent.top",
+  "license": "MIT",
+  "build": {
+    "appId": "org.bytedo.epub",
+    "productName": "E-pub Reader",
+    "copyright": "Copyright © 2019 ${author}",
+    "directories": {
+      "buildResources": "icons",
+      "output": "build"
+    },
+    "electronDownload": {
+      "version": "11.0.4",
+      "mirror": "https://npm.taobao.org/mirrors/electron/"
+    },
+    "files": ["src/**/*", "node_modules/iofs/*"],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "target": "dmg",
+      "icon": "icons/app.icns",
+      "darkModeSupport": false
+    }
+  },
+  "devDependencies": {
+    "electron": "11.0.4",
+    "electron-builder": "^22.1.0"
+  },
+  "dependencies": {
+    "iofs": "^1.3.2"
+  }
+}

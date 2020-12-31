@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <title></title>
+  <link href="/lib/css/reset-basic.css" rel="stylesheet">
+  <link href="/css/float.css" rel="stylesheet">
+  <script src="/js/float.js" type="module"></script>
+</head>
+<body class="noselect">
+
+  <div class="app" anot="app">
+    <wc-scroll class="list">
+      <section class="item" :for="it in list">
+        <div class="info">
+          <h3 class="text-ell" :text="it.name"></h3>
+          <cite :text="it.code"></cite>
+        </div>
+
+        <div class="today">
+          <span class="money" :text="'¥' + it.cm"></span>
+          <span 
+            class="percent" 
+            :class="{red: it.cp > 0, green: it.cp < 0}" 
+            :text="it.cp + '%'">
+          </span>
+        </div>
+      </section>
+      <section :if="list.length === 0" class="item">啥基都没有...</section>
+    </wc-scroll>
+  </div>
+  
+  
+</body>
+</html>
