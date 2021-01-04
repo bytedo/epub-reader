@@ -9,9 +9,9 @@ const { Menu } = require('electron')
 module.exports = function(win) {
   var menuList = Menu.buildFromTemplate([
     {
-      label: '搞基数据',
+      label: 'E-pub Reader',
       submenu: [
-        { role: 'about', label: '关于搞基数据' },
+        { role: 'about', label: '关于E-pub Reader' },
         { type: 'separator' },
         {
           label: '退出',

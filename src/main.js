@@ -4,20 +4,13 @@
  * @date 2019/09/16 20:51:19
  */
 
-const {
-  app,
-  BrowserWindow,
-  protocol,
-  ipcMain,
-  net,
-  Notification
-} = require('electron')
+const { app, BrowserWindow, protocol, ipcMain } = require('electron')
 const path = require('path')
 const fs = require('iofs')
 
 const { createMainWindow, createFloatWindow } = require('./tools/window')
 const createMenu = require('./tools/menu')
-const createTay = require('./tools/tray')
+const Socket = require('./tools/socket')
 
 const MIME_TYPES = {
   '.js': 'text/javascript',
@@ -34,45 +27,6 @@ const MIME_TYPES = {
 const ROOT = __dirname
 
 var timer
-
-function fetch(url) {
-  return new Promise((y, n) => {
-    var conn = net.request(url)
-    var r = []
-
-    conn.on('response', res => {
-      res.on('data', c => {
-        r.push(c)
-      })
-
-      res.on('end', _ => {
-        y(Buffer.concat(r).toString())
-      })
-    })
-
-    conn.on('error', e => {
-      n(e)
-    })
-
-    conn.end()
-  })
-}
-
-function ring() {
-  var n = 5
-  var t = setInterval(() => {
-    var notify = new Notification({
-      title: '搞基⏰',
-      subtitle: '神奇的2点半到啦',
-      body: '神奇的2点半到啦, 该加仓的加仓, 该卖的卖啦'
-    })
-    notify.show()
-    n--
-    if (n === 0) {
-      clearInterval(t)
-    }
-  }, 1000)
-}
 
 /* ----------------------------------------------------- */
 app.commandLine.appendSwitch('--lang', 'zh-CN')
@@ -101,7 +55,7 @@ app.once('ready', () => {
   app.__float__ = createFloatWindow()
 
   createMenu(app.__main__)
-  createTay(app.__float__, app.__main__)
+  Socket(app)
 
   app.__main__.on('closed', () => {
     app.__main__ = null
@@ -115,39 +69,4 @@ app.once('ready', () => {
   //     app.__main__.restore()
   //   }
   // })
-})
-
-ipcMain.on('app', (ev, conn) => {
-  switch (conn.type) {
-    case 'fetch':
-      fetch(conn.data).then(r => {
-        ev.returnValue = r
-      })
-      break
-
-    case 'notify':
-      clearTimeout(timer)
-      var t1 = Date.now()
-      var t2 = new Date()
-      t2.setHours(14)
-      t2.setMinutes(30)
-      t2.setSeconds(0)
-
-      if (t2.getTime() - t1 > 0) {
-        timer = setTimeout(ring, t2.getTime() - t1)
-      }
-
-      ev.returnValue = true
-      break
-
-    case 'data-reload':
-      app.__main__.webContents.send('app', { type: 'data-reload', data: null })
-      ev.returnValue = true
-      break
-
-    case 'devtools':
-      app.__main__.openDevTools()
-      ev.returnValue = true
-      break
-  }
 })

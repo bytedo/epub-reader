@@ -11,19 +11,13 @@ const { BrowserWindow } = require('electron')
  */
 exports.createMainWindow = function(icon) {
   var win = new BrowserWindow({
-    title: '搞基数据',
-    width: 1024,
+    title: 'E-pub Reader',
+    width: 960,
     height: 540,
-    frame: false,
-    titleBarStyle: 'hiddenInset',
     resizable: false,
     maximizable: false,
     icon,
-    transparent: true,
-    vibrancy: 'hud',
-    visualEffectState: 'active',
     webPreferences: {
-      // webSecurity: false,
       experimentalFeatures: true,
       nodeIntegration: true,
       spellcheck: false
@@ -33,10 +27,10 @@ exports.createMainWindow = function(icon) {
 
   win.loadURL('app://local/index.html')
 
-  // win.on('ready-to-show', _ => {
-  //   win.show()
-  //   win.openDevTools()
-  // })
+  win.on('ready-to-show', _ => {
+    win.show()
+    win.openDevTools()
+  })
 
   win.on('close', ev => {
     ev.preventDefault()
