@@ -26,9 +26,9 @@
       "version": "11.0.4",
       "mirror": "https://npm.taobao.org/mirrors/electron/"
     },
-    "files": ["src/**/*", "node_modules/iofs/*"],
+    "files": ["src/**/*", "node_modules/iofs/*", "node_modules/epub/*"],
     "mac": {
-      "category": "public.app-category.developer-tools",
+      "category": "public.app-category.utilities",
       "target": "dmg",
       "icon": "icons/app.icns",
       "darkModeSupport": false
@@ -39,6 +39,7 @@
     "electron-builder": "^22.1.0"
   },
   "dependencies": {
+    "epub": "^1.2.1",
     "iofs": "^1.3.2"
   }
 }

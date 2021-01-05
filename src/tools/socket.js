@@ -4,7 +4,13 @@
  * @date 2021/01/04 14:58:46
  */
 
-const { ipcMain, net } = require('electron')
+const { app, ipcMain, net } = require('electron')
+const fs = require('iofs')
+const path = require('path')
+const Epub = require('epub')
+
+const HOME = path.resolve(app.getPath('userData'))
+const CACHE_DIR = path.join(HOME, 'book_cache')
 
 function fetch(url) {
   return new Promise((y, n) => {
@@ -39,6 +45,59 @@ module.exports = function(app) {
         break
 
       case 'parse-book':
+        let books = conn.data
+        let eb = new Epub(books[0].path)
+
+        function saveImage(id, name) {
+          return new Promise(done => {
+            eb.getImage(id, (err, buf) => {
+              fs.echo(buf, path.resolve(CACHE_DIR, name))
+              done()
+            })
+          })
+        }
+
+        function saveHtml(id, name) {
+          return new Promise(done => {
+            eb.getChapter(id, (err, txt) => {
+              txt = (txt + '').replace(/<([\w\-]+)[^>]*?>/g, '<$1>')
+              fs.echo(txt, path.resolve(CACHE_DIR, name))
+              done()
+            })
+          })
+        }
+
+        eb.on('end', async _ => {
+          loop: for (let k in eb.manifest) {
+            let it = eb.manifest[k]
+
+            switch (it['media-type']) {
+              case 'text/css':
+                continue loop
+                break
+
+              case 'application/x-dtbncx+xml':
+                fs.echo(
+                  JSON.stringify(eb.toc),
+                  path.resolve(CACHE_DIR, it.href)
+                )
+                break
+
+              case 'application/xhtml+xml':
+                await saveHtml(it.id, it.href)
+                break
+
+              default:
+                if (it['media-type'].startsWith('image')) {
+                  saveImage(it.id, it.href)
+                }
+                break
+            }
+          }
+          ev.returnValue = [eb.manifest, eb.flow]
+        })
+
+        eb.parse()
         break
     }
   })

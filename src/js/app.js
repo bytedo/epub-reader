@@ -60,6 +60,16 @@ Anot({
       ev.preventDefault()
       // clearTimeout(this.timer)
       this.isDragIn = false
+
+      let files = Array.from(ev.dataTransfer.files)
+        .filter(it => it.type === 'application/epub+zip')
+        .map(it => {
+          let { name, path } = it
+          return { name, path }
+        })
+      let res = app.dispatch('parse-book', files)
+
+      console.log(res)
     })
   },
   methods: {}
