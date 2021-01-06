@@ -113,6 +113,7 @@ module.exports = function(app) {
           } else {
             cache[cate] = [info]
           }
+          fs.echo(JSON.stringify(cache), DB_FILE)
           ev.returnValue = info
         })
 

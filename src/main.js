@@ -65,11 +65,11 @@ app.once('ready', () => {
   })
 
   protocol.registerStreamProtocol('book', function(req, cb) {
-    var file = decodeURIComponent(req.url.replace(/^book:[\/]+/, '/'))
+    var file = decodeURIComponent(req.url.replace(/^book:[\/]+cache/, './'))
     var ext = path.extname(file)
 
     file = path.resolve(CACHE_DIR, file)
-
+    console.log(file)
     cb({
       data: fs.origin.createReadStream(file),
       mimeType: MIME_TYPES[ext] || MIME_TYPES.all,

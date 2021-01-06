@@ -77,7 +77,7 @@ Anot({
       while (this.load.curr < this.load.num) {
         this.load.curr++
         let book = files.pop()
-        let res = app.dispatch('parse-book', { book, cate: this.burr })
+        let res = app.dispatch('parse-book', { book, cate: this.curr })
         console.log(res)
         if (res) {
           this.books.push(res)
