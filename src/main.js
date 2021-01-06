@@ -44,7 +44,7 @@ protocol.registerSchemesAsPrivileged([
 
 /* ----------------------------------------------------- */
 
-app.dock.hide()
+// app.dock.hide()
 
 //  初始化应用
 app.once('ready', () => {

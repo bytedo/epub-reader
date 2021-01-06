@@ -29,14 +29,14 @@ Anot({
   $id: 'app',
   state: {
     input: '',
-    curr: 1,
-    list: [{ id: 1, name: '默认分类', num: 12 }],
-    $dict: {},
+    curr: '默认分类',
+    cates: [{ name: '默认分类', num: 12 }],
+    books: [],
     loading: false,
     isDragIn: false,
-    preferences: {
-      tab: 1,
-      notify: Anot.ls('notify') === '1'
+    load: {
+      num: 0,
+      curr: 0
     }
   },
 
@@ -65,11 +65,27 @@ Anot({
         .filter(it => it.type === 'application/epub+zip')
         .map(it => {
           let { name, path } = it
+          name = name.replace(/\.epub$/, '')
           return { name, path }
         })
-      let res = app.dispatch('parse-book', files)
 
-      console.log(res)
+      this.load.num = files.length
+      this.load.curr = 0
+      this.loading = true
+
+      console.time(1)
+      while (this.load.curr < this.load.num) {
+        this.load.curr++
+        let book = files.pop()
+        let res = app.dispatch('parse-book', { book, cate: this.burr })
+        console.log(res)
+        if (res) {
+          this.books.push(res)
+        }
+      }
+      console.timeEnd(1)
+
+      this.loading = false
     })
   },
   methods: {}

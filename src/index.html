@@ -11,13 +11,13 @@
 </head>
 <body class="noselect">
 
-  <div class="app" anot="app" :class="{loading: loading}">
+  <div class="app" anot="app">
 
     <wc-scroll class="category">
       <item 
         class="item" 
-        :class="{active: curr === it.id}" 
-        :for="it in list">
+        :class="{active: curr === it.name}" 
+        :for="it in cates">
         <strong :text="it.name"></strong>
         <span class="num" :text="it.num"></span>
       </item>
@@ -27,13 +27,23 @@
 
     <div class="detail" :class="{blur: !curr.code}">
 
-
+      <book :for="it in books">
+        <img :src="'book://' + it.title + '/' + it.cover">
+        {{it.title}}
+      </book>
 
 
     </div>
 
 
     <div class="drag-mask" ref="mask" :visible="isDragIn"></div>
+
+    <div class="book-loading" ref="books" :visible="loading">
+      <div class="loading">
+        <span>共 {{load.num}} 本书</span>
+        <span>当前正在解析第 {{load.curr}} 本</span>
+      </div>
+    </div>
 
   </div>
   

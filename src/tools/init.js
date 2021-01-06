@@ -23,10 +23,10 @@ PATH_SET = null
 
 /* ********** 修复环境变量 end *********** */
 
-const INIT_FILE = path.join(HOME, 'app.cache')
+const DB_FILE = path.join(HOME, 'app.cache')
 const CACHE_DIR = path.join(HOME, 'book_cache')
 
-if (!fs.exists(INIT_FILE)) {
-  fs.echo('[]', INIT_FILE)
+if (!fs.exists(DB_FILE)) {
+  fs.echo('{}', DB_FILE)
   fs.mkdir(CACHE_DIR)
 }
