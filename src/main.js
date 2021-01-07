@@ -9,7 +9,7 @@ const path = require('path')
 const fs = require('iofs')
 
 require('./tools/init')
-const { createMainWindow, createFloatWindow } = require('./tools/window')
+const { createMainWindow, createViewWindow } = require('./tools/window')
 const createMenu = require('./tools/menu')
 const Socket = require('./tools/socket')
 
@@ -50,7 +50,9 @@ protocol.registerSchemesAsPrivileged([
 app.once('ready', () => {
   // 注册协议
   protocol.registerStreamProtocol('app', function(req, cb) {
-    var file = decodeURIComponent(req.url.replace(/^app:\/\/local\//, ''))
+    var file = decodeURIComponent(
+      req.url.replace(/^app:\/\/local\//, '')
+    ).replace(/\#.*$/, '')
     var ext = path.extname(file)
 
     file = path.resolve(ROOT, file)
@@ -69,7 +71,6 @@ app.once('ready', () => {
     var ext = path.extname(file)
 
     file = path.resolve(CACHE_DIR, file)
-    console.log(file)
     cb({
       data: fs.origin.createReadStream(file),
       mimeType: MIME_TYPES[ext] || MIME_TYPES.all,
@@ -81,14 +82,14 @@ app.once('ready', () => {
 
   // 创建浏览器窗口
   app.__main__ = createMainWindow(path.resolve(ROOT, './images/app.png'))
-  // app.__float__ = createFloatWindow()
+  app.__view__ = createViewWindow()
 
   createMenu(app.__main__)
   Socket(app)
 
   app.__main__.on('closed', () => {
     app.__main__ = null
-    app.__float__ = null
+    app.__view__ = null
     app.exit()
   })
 

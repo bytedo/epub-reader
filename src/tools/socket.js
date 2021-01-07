@@ -45,13 +45,18 @@ module.exports = function(app) {
         })
         break
 
+      case 'get-books':
+        ev.returnValue = JSON.parse(fs.cat(DB_FILE))
+        break
+
       case 'parse-book':
         let { book, cate } = conn.data
         let eb = new Epub(book.path)
         let cache = JSON.parse(fs.cat(DB_FILE))
 
         eb.on('end', async _ => {
-          let { title, cover } = eb.metadata
+          let { title } = eb.metadata
+          let cover = 'cover'
           let dir = path.join(CACHE_DIR, title)
 
           function saveImage(id, name) {
@@ -65,12 +70,21 @@ module.exports = function(app) {
 
           function saveHtml(id, name) {
             return new Promise(done => {
-              eb.getChapter(id, (err, txt) => {
-                // txt = (txt + '').replace(
-                //   /<(?!img|image)([\w\-]+)[^>]*>/g,
-                //   '<$1>'
-                // )
-                fs.echo(txt, path.join(dir, name.replace('.xhtml', '.html')))
+              eb.getChapterRaw(id, (err, txt) => {
+                let m = (txt + '').match(/<body[^>]*?>([\w\W]+)<\/body>/)
+                if (m) {
+                  let htm = m[1]
+                    .replace(
+                      /<(?!img|image)([\w\-]+)[^>]*?( id="[^\s]*?")?[^>]*?>/g,
+                      '<$1$2>'
+                    )
+                    .replace(/<pre><code>/g, '<wc-code>')
+                    .replace(/<\/code><\/pre>/g, '</wc-code>')
+
+                  fs.echo(htm, path.join(dir, name.replace('.xhtml', '.html')))
+                } else {
+                  console.log(id, name, txt)
+                }
                 done()
               })
             })

@@ -6,31 +6,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
   <title></title>
   <link href="/lib/css/reset-basic.css" rel="stylesheet">
-  <link href="/css/float.css" rel="stylesheet">
-  <script src="/js/float.js" type="module"></script>
+  <link href="/css/view.css" rel="stylesheet">
+  <script src="/js/view.js" type="module"></script>
 </head>
-<body class="noselect">
+<body>
 
-  <div class="app" anot="app">
-    <wc-scroll class="list">
-      <section class="item" :for="it in list">
-        <div class="info">
-          <h3 class="text-ell" :text="it.name"></h3>
-          <cite :text="it.code"></cite>
-        </div>
+<div class="app" anot="app">
+  <wc-scroll class="toc noselect">
+    <item 
+      :for="it in toc" 
+      :class="{['lev-' + it.level]: 1, active: it.title === curr}"
+      @click="viewChapter(it)"
+    >
+      <span class="text-ell" :attr-title="it.title" :text="it.title"></span>
+    </item>
+  </wc-scroll>
 
-        <div class="today">
-          <span class="money" :text="'¥' + it.cm"></span>
-          <span 
-            class="percent" 
-            :class="{red: it.cp > 0, green: it.cp < 0}" 
-            :text="it.cp + '%'">
-          </span>
-        </div>
-      </section>
-      <section :if="list.length === 0" class="item">啥基都没有...</section>
-    </wc-scroll>
-  </div>
+  <wc-scroll class="chapter-box" ref="chapter">
+    <div class="chapter">
+      <article class="detail" :html="chapter"></article>
+    </div>
+  </wc-scroll>
+</div>
   
   
 </body>

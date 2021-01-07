@@ -1,0 +1,233 @@
+@charset "UTF-8";
+/**
+ * 浮窗样式
+ * @authors yutent<yutent@doui.cc>
+ * @date 2018/12/16 17:15:07
+ */
+
+html {
+  width: 100%;
+  height: 100vh;
+}
+
+body {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  line-height: 1.25;
+  font-size: 14px;
+  color: var(--color-dark-1);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.app {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+
+  .toc {
+    width: 260px;
+    height: 100%;
+
+    item {
+      display: flex;
+      align-items: center;
+      height: 36px;
+      padding: 0 12px;
+      border-bottom: 1px solid var(--color-plain-1);
+      cursor: pointer;
+
+      &.lev-0 {
+        font-weight: bold;
+      }
+      &.lev-1 {
+        padding-left: 24px;
+        font-weight: bold;
+      }
+      &.lev-2 {
+        padding-left: 36px;
+      }
+      &.lev-3 {
+        padding-left: 48px;
+      }
+
+      &:hover {
+        color: var(--color-blue-1);
+      }
+
+      &.active {
+        color: #fff;
+        background: var(--color-blue-1);
+      }
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
+  }
+
+  .chapter-box {
+    flex: 1;
+    height: 100%;
+    border-left: 1px solid var(--color-plain-2);
+  }
+
+  .chapter {
+    display: flex;
+    justify-content: center;
+    padding: 8px 24px;
+
+    .detail {
+      max-width: 768px;
+      line-height: 1.5;
+      font-size: 14px;
+
+      a {
+        text-decoration: underline;
+        color: var(--color-teal-2);
+      }
+      a:hover {
+        color: var(--color-teal-1);
+        text-decoration: none;
+      }
+
+      em,
+      del {
+        color: var(--color-grey-2);
+      }
+      strong,
+      strong em,
+      strong {
+        color: var(--color-dark-3);
+      }
+      a {
+        strong,
+        em {
+          color: inherit;
+        }
+      }
+      em,
+      strong,
+      del {
+        padding: 0 2px;
+      }
+
+      img {
+        max-width: 100%;
+      }
+
+      blockquote {
+        margin: 10px 0;
+        padding: 5px 10px;
+        line-height: 1.5;
+        border-left: 5px solid var(--color-teal-1);
+        background: #f2faf7;
+        color: var(--color-grey-2);
+        p {
+          margin: 0;
+        }
+      }
+
+      > p {
+        margin: 12px 0;
+        // text-indent: 2em;
+      }
+
+      ol {
+        margin-left: 1em;
+        list-style: decimal outside none;
+      }
+      ul {
+        margin-left: 1em;
+        list-style: disc outside none;
+      }
+      li {
+        margin: 0.5em 0;
+      }
+      li ol {
+        margin-left: 1em;
+      }
+      li ul {
+        margin-left: 1em;
+        list-style-type: circle;
+      }
+      li ol ul,
+      li ul ul {
+        list-style-type: square;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        margin: 15px 0;
+        line-height: 2;
+        font-weight: bold;
+        font-size: 16px;
+
+        code.inline {
+          background: none;
+        }
+        a {
+          text-decoration: none;
+          color: #333;
+        }
+      }
+      h3,
+      h4,
+      h5,
+      h6 {
+        a {
+          &::before {
+            content: '∮ ';
+            color: var(--color-teal-1);
+            font-weight: normal;
+          }
+        }
+      }
+      h1 {
+        margin: 0 0 30px;
+        font-size: 24px;
+        text-align: center;
+      }
+      h2 {
+        margin: 20px 0;
+        font-size: 22px;
+        border-bottom: 1px solid var(--color-plain-2);
+      }
+      h3 {
+        margin: 20px 0 15px;
+        font-size: 20px;
+      }
+      h4 {
+        font-size: 18px;
+      }
+
+      table {
+        width: 100%;
+        border-spacing: 0;
+        border-collapse: collapse;
+
+        tr {
+          background-color: #fff;
+        }
+        thead tr {
+          background: var(--color-plain-1);
+        }
+        th,
+        td {
+          padding: 6px 13px;
+          border: 1px solid var(--color-plain-2);
+        }
+        th {
+          font-weight: bold;
+        }
+        tr:nth-child(2n) {
+          background-color: #fcfdff;
+        }
+      }
+    }
+  }
+}

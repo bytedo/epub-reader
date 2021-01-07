@@ -25,15 +25,15 @@
   
 
 
-    <div class="detail" :class="{blur: !curr.code}">
-
-      <book :for="it in books">
-        <img :src="'book://cache/' + it.title + '/' + it.cover">
-        {{it.title}}
-      </book>
-
-
-    </div>
+  
+    <wc-scroll class="books-scroll">
+      <list class="books">
+        <book class="book" :for="it in books">
+          <img :src="'book://cache/' + it.title + '/' + it.cover">
+        </book>
+      </list>
+    </wc-scroll>
+ 
 
 
     <div class="drag-mask" ref="mask" :visible="isDragIn"></div>

@@ -27,10 +27,10 @@ exports.createMainWindow = function(icon) {
 
   win.loadURL('app://local/index.html')
 
-  win.on('ready-to-show', _ => {
-    win.show()
-    win.openDevTools()
-  })
+  // win.on('ready-to-show', _ => {
+  //   win.show()
+  //   win.openDevTools()
+  // })
 
   win.on('close', ev => {
     ev.preventDefault()
@@ -41,16 +41,14 @@ exports.createMainWindow = function(icon) {
 }
 
 // 创建悬浮窗口
-exports.createFloatWindow = function() {
+exports.createViewWindow = function() {
   var win = new BrowserWindow({
-    width: 280,
-    height: 360,
-    resizable: false,
-    maximizable: false,
-    frame: false,
-    show: false,
-    vibrancy: 'hud',
-    visualEffectState: 'active',
+    width: 1024,
+    height: 768,
+    minWidth: 1024,
+    minHeight: 768,
+    // show: false,
+    title: 'E-pub Reader',
     webPreferences: {
       experimentalFeatures: true,
       nodeIntegration: true,
@@ -58,13 +56,9 @@ exports.createFloatWindow = function() {
     }
   })
 
-  // win.openDevTools()
+  win.openDevTools()
 
-  win.on('blur', ev => {
-    win.hide()
-  })
-
-  win.loadURL('app://local/float.html')
+  win.loadURL('app://local/view.html')
 
   return win
 }
