@@ -50,9 +50,9 @@ protocol.registerSchemesAsPrivileged([
 app.once('ready', () => {
   // 注册协议
   protocol.registerStreamProtocol('app', function(req, cb) {
-    var file = decodeURIComponent(
-      req.url.replace(/^app:\/\/local\//, '')
-    ).replace(/\#.*$/, '')
+    var file = decodeURIComponent(req.url.replace(/^app:\/\/local\//, ''))
+      .replace(/\#.*$/, '')
+      .replace(/\?.*$/, '')
     var ext = path.extname(file)
 
     file = path.resolve(ROOT, file)
@@ -71,6 +71,7 @@ app.once('ready', () => {
     var ext = path.extname(file)
 
     file = path.resolve(CACHE_DIR, file)
+
     cb({
       data: fs.origin.createReadStream(file),
       mimeType: MIME_TYPES[ext] || MIME_TYPES.all,
@@ -82,10 +83,9 @@ app.once('ready', () => {
 
   // 创建浏览器窗口
   app.__main__ = createMainWindow(path.resolve(ROOT, './images/app.png'))
-  app.__view__ = createViewWindow()
 
   createMenu(app.__main__)
-  Socket(app)
+  Socket(app, createViewWindow)
 
   app.__main__.on('closed', () => {
     app.__main__ = null

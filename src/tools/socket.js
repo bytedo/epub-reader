@@ -4,7 +4,7 @@
  * @date 2021/01/04 14:58:46
  */
 
-const { app, ipcMain, net } = require('electron')
+const { app, ipcMain } = require('electron')
 const fs = require('iofs')
 const path = require('path')
 const Epub = require('epub')
@@ -13,40 +13,37 @@ const HOME = path.resolve(app.getPath('userData'))
 const DB_FILE = path.join(HOME, 'app.cache')
 const CACHE_DIR = path.join(HOME, 'book_cache')
 
-function fetch(url) {
-  return new Promise((y, n) => {
-    var conn = net.request(url)
-    var r = []
-
-    conn.on('response', res => {
-      res.on('data', c => {
-        r.push(c)
-      })
-
-      res.on('end', _ => {
-        y(Buffer.concat(r).toString())
-      })
-    })
-
-    conn.on('error', e => {
-      n(e)
-    })
-
-    conn.end()
-  })
-}
-
-module.exports = function(app) {
+module.exports = function(app, createViewWindow) {
   ipcMain.on('app', (ev, conn) => {
     switch (conn.type) {
-      case 'fetch':
-        fetch(conn.data).then(r => {
-          ev.returnValue = r
-        })
-        break
-
       case 'get-books':
         ev.returnValue = JSON.parse(fs.cat(DB_FILE))
+        break
+
+      case 'save-books':
+        fs.echo(JSON.stringify(conn.data), DB_FILE)
+        ev.returnValue = true
+        break
+
+      case 'read':
+        if (app.__view__) {
+          // 打开同一个文档, 直接忽略
+          if (app.__view__.__title__ === conn.data.title) {
+            app.__view__.focus()
+            ev.returnValue = true
+            return
+          }
+          app.__view__.destroy()
+        }
+        app.__view__ = createViewWindow(conn.data)
+        app.__view__.__title__ = conn.data.title
+        ev.returnValue = true
+        break
+
+      case 'delete-book':
+        let dir = path.join(CACHE_DIR, conn.data)
+        fs.rm(dir, true)
+        ev.returnValue = true
         break
 
       case 'parse-book':

@@ -4,7 +4,7 @@
  * @date 2020/12/10 14:57:49
  */
 
-const { BrowserWindow } = require('electron')
+const { app, BrowserWindow } = require('electron')
 
 /**
  * 应用主窗口
@@ -27,21 +27,23 @@ exports.createMainWindow = function(icon) {
 
   win.loadURL('app://local/index.html')
 
-  // win.on('ready-to-show', _ => {
-  //   win.show()
-  //   win.openDevTools()
-  // })
+  win.on('ready-to-show', _ => {
+    win.show()
+    // win.openDevTools()
+  })
 
   win.on('close', ev => {
-    ev.preventDefault()
-    win.hide()
+    if (app.__view__) {
+      ev.preventDefault()
+      win.hide()
+    }
   })
 
   return win
 }
 
 // 创建悬浮窗口
-exports.createViewWindow = function() {
+exports.createViewWindow = function(params) {
   var win = new BrowserWindow({
     width: 1024,
     height: 768,
@@ -56,9 +58,13 @@ exports.createViewWindow = function() {
     }
   })
 
-  win.openDevTools()
+  // win.openDevTools()
 
-  win.loadURL('app://local/view.html')
+  win.loadURL('app://local/view.html?' + params)
+
+  win.on('closed', ev => {
+    app.__view__ = null
+  })
 
   return win
 }

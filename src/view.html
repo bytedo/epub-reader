@@ -12,7 +12,7 @@
 <body>
 
 <div class="app" anot="app">
-  <wc-scroll class="toc noselect">
+  <wc-scroll class="toc noselect" ref="toc">
     <item 
       :for="it in toc" 
       :class="{['lev-' + it.level]: 1, active: it.title === curr}"

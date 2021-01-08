@@ -24,6 +24,7 @@ body {
 .app {
   position: relative;
   display: flex;
+  width: 100%;
   height: 100%;
 
   .category {
@@ -160,6 +161,31 @@ body {
         content: '🌑';
         font-size: 36px;
         animation: loading 1s infinite;
+      }
+    }
+  }
+
+  .context-menu {
+    display: flex;
+    flex-direction: column;
+    width: 100px;
+    padding: 5px 0;
+    background: #fff;
+
+    .item {
+      height: 30px;
+      line-height: 30px;
+      padding: 0 15px;
+      cursor: pointer;
+
+      &:hover {
+        background: #f2f5fc;
+      }
+
+      &.diabled {
+        color: var(--color-plain-2);
+        background: #fff;
+        cursor: default;
       }
     }
   }

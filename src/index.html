@@ -16,6 +16,8 @@
     <wc-scroll class="category">
       <item 
         class="item" 
+        @contextmenu="pickCtx1(it, $event)"
+        @click="view(it)"
         :class="{active: curr === it.name}" 
         :for="it in cates">
         <strong :text="it.name"></strong>
@@ -28,7 +30,12 @@
   
     <wc-scroll class="books-scroll">
       <list class="books">
-        <book class="book" :for="it in books">
+        <book 
+          class="book" 
+          :for="it in books" 
+          @dblclick="read(it)" 
+          @contextmenu="pickCtx2(it, $event)"
+        >
           <img :src="'book://cache/' + it.title + '/' + it.cover">
         </book>
       </list>
@@ -38,12 +45,27 @@
 
     <div class="drag-mask" ref="mask" :visible="isDragIn"></div>
 
-    <div class="book-loading" ref="books" :visible="loading">
+    <div class="book-loading" :visible="loading">
       <div class="loading">
         <span>共 {{load.num}} 本书</span>
         <span>当前正在解析第 {{load.curr}} 本</span>
       </div>
     </div>
+
+    <wc-layer ref="ctx1" left="100px" top="0" radius="0">
+      <ul class="context-menu noselect">
+        <li class="item" @click="deleteCate">删除</li>
+        <li class="item" @click="renameCate">重命名</li>
+        <li class="item" @click="createCate">新建分类</li>
+      </ul>
+    </wc-layer>
+
+    <wc-layer ref="ctx2" left="100px" top="0" radius="0">
+      <ul class="context-menu noselect">
+        <li class="item" @click="deleteBook">删除</li>
+        <li class="item diabled">移动到</li>
+      </ul>
+    </wc-layer>
 
   </div>
   
