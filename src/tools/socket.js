@@ -86,6 +86,10 @@ module.exports = function(app, createViewWindow) {
                     .replace(/<pre><code>/g, '<wc-code>')
                     .replace(/<\/code><\/pre>/g, '</wc-code>')
 
+                  htm = htm
+                    .replace(/<pre>/g, '<wc-code>')
+                    .replace(/<\/pre>/g, '</wc-code>')
+
                   htm = htm.replace(/<wc-code>([\w\W]*?)<\/wc-code>/g, function(
                     m,
                     s
