@@ -121,6 +121,10 @@ Anot({
     this.$db = db
     this.cates = cates
     this.books = books || []
+
+    app.on('draw-cover', title => {
+      this.drawCover(title)
+    })
   },
   methods: {
     view(item) {
@@ -174,8 +178,59 @@ Anot({
         this.$refs.ctx2.show()
       })
     },
+
     saveDB() {
       app.dispatch('save-books', Anot.deepCopy(this.$db))
+    },
+
+    drawCover(name) {
+      var canvas = document.createElement('canvas')
+      var ctx = canvas.getContext('2d')
+      var tmp = name.split('').map(s => (/[\w\s\(\)]/.test(s) ? 1 : 2))
+
+      canvas.width = 128
+      canvas.height = 160
+
+      ctx.fillStyle =
+        '#' +
+        Buffer.from(name)
+          .toString('hex')
+          .slice(-6)
+
+      ctx.fillRect(0, 0, 128, 160)
+
+      ctx.fillStyle = '#fff'
+      ctx.font = '14px menlo,Hiragino Sans GB'
+      ctx.textAlign = 'center'
+
+      let row = 0
+      let last = 0
+      tmp.reduce((sum, c, i) => {
+        sum += c
+
+        if (sum >= 14 && row === 0) {
+          ctx.fillText(name.slice(0, i + 1), 64, 60, 100)
+          last = i
+          row = 1
+        } else if (sum >= 28 && row === 1) {
+          ctx.fillText(name.slice(last, i + 1), 64, 60 + row * 26, 100)
+          row = 2
+          last = i
+        } else if (sum >= 42 && row === 2) {
+          ctx.fillText(name.slice(last, i + 1), 64, 60 + row * 26, 100)
+        }
+        return sum
+      }, 0)
+
+      if (last === 0) {
+        ctx.fillText(name, 64, 76, 100)
+      } else {
+        if (last < tmp.length) {
+          ctx.fillText(name.slice(last + 1), 64, 60 + row * 26, 100)
+        }
+      }
+      let base64 = canvas.toDataURL('image/webp', 1).split(',')[1]
+      app.dispatch('save-cover', { base64, name })
     },
 
     deleteCate() {

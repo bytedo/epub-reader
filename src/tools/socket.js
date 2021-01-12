@@ -26,9 +26,10 @@ module.exports = function(app, createViewWindow) {
         break
 
       case 'read':
+        let params = JSON.parse(Buffer.from(conn.data, 'base64'))
         if (app.__view__) {
           // 打开同一个文档, 直接忽略
-          if (app.__view__.__title__ === conn.data.title) {
+          if (app.__view__.__title__ === params.title) {
             app.__view__.focus()
             ev.returnValue = true
             return
@@ -36,13 +37,20 @@ module.exports = function(app, createViewWindow) {
           app.__view__.destroy()
         }
         app.__view__ = createViewWindow(conn.data)
-        app.__view__.__title__ = conn.data.title
+        app.__view__.__title__ = params.title
         ev.returnValue = true
         break
 
       case 'delete-book':
         let dir = path.join(CACHE_DIR, conn.data)
         fs.rm(dir, true)
+        ev.returnValue = true
+        break
+
+      case 'save-cover':
+        let file = path.join(CACHE_DIR, conn.data.name, 'cover.webp')
+        let buf = Buffer.from(conn.data.base64, 'base64')
+        fs.echo(buf, file)
         ev.returnValue = true
         break
 
@@ -53,7 +61,7 @@ module.exports = function(app, createViewWindow) {
 
         eb.on('end', async _ => {
           let { title } = eb.metadata
-          let cover = 'cover'
+          let cover = ''
           let dir = path.join(CACHE_DIR, title)
 
           function saveImage(id, name) {
@@ -77,6 +85,14 @@ module.exports = function(app, createViewWindow) {
                     )
                     .replace(/<pre><code>/g, '<wc-code>')
                     .replace(/<\/code><\/pre>/g, '</wc-code>')
+
+                  htm = htm.replace(/<wc-code>([\w\W]*?)<\/wc-code>/g, function(
+                    m,
+                    s
+                  ) {
+                    s = s.replace(/<\/?\w+>/g, '')
+                    return `<wc-code>${s}</wc-code>`
+                  })
 
                   fs.echo(htm, path.join(dir, name.replace('.xhtml', '.html')))
                 } else {
@@ -106,15 +122,23 @@ module.exports = function(app, createViewWindow) {
               default:
                 if (it['media-type'].startsWith('image')) {
                   saveImage(it.id, it.href)
-                  if (it.href.includes(cover)) {
+                  if (it.href.includes('cover')) {
                     cover = it.href
                   }
                 }
                 break
             }
           }
+          if (!cover) {
+            cover = 'cover.webp'
+            app.__main__.webContents.send('app', {
+              type: 'draw-cover',
+              data: title
+            })
+          }
 
           let info = { title, cover }
+
           if (cache[cate]) {
             if (!cache[cate].some(it => it.title === title)) {
               cache[cate].push(info)

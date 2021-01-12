@@ -36,7 +36,10 @@
           @dblclick="read(it)" 
           @contextmenu="pickCtx2(it, $event)"
         >
-          <img :src="'book://cache/' + it.title + '/' + it.cover">
+          <img 
+            :attr-alt="it.title" 
+            :src="it.c ? it.c : 'book://cache/' + it.title + '/' + it.cover"
+          >
         </book>
       </list>
     </wc-scroll>

@@ -12,6 +12,8 @@ import { md5 } from '/lib/md5.js'
 import fetch from '/lib/fetch/index.js'
 import app from '/lib/socket.js'
 
+const { dirname, join } = require('path')
+
 Anot({
   $id: 'app',
   state: {
@@ -89,7 +91,9 @@ Anot({
             this.chapter = txt.replace(
               /<img[^>]*?src="(.*?)"[^>]*?\/?>/g,
               (m, s1) => {
-                s1 = s1.replace('../', '')
+                // s1 = s1.replace('../', '')
+                s1 = join(dirname(file), s1)
+                console.log(file, s1)
                 return `<img src="book://cache/${this.book}/${s1}">`
               }
             )

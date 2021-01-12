@@ -128,6 +128,16 @@ body {
         }
       }
 
+      code {
+        display: inline;
+        margin: 0 2px;
+        padding: 0 2px;
+        color: var(--color-orange-3);
+        background: var(--color-plain-1);
+        border-radius: 2px;
+        font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
+      }
+
       > p {
         margin: 12px 0;
         // text-indent: 2em;
@@ -167,7 +177,7 @@ body {
         font-weight: bold;
         font-size: 16px;
 
-        code.inline {
+        code {
           background: none;
         }
         a {

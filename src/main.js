@@ -44,8 +44,6 @@ protocol.registerSchemesAsPrivileged([
 
 /* ----------------------------------------------------- */
 
-// app.dock.hide()
-
 //  初始化应用
 app.once('ready', () => {
   // 注册协议
