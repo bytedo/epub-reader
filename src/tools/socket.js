@@ -140,7 +140,7 @@ module.exports = function(app, createViewWindow) {
 
           toc = eb.flow.map((it, i) => {
             let tmp = dict[it.id] || { level: i === 0 ? i : undefined }
-            if (!tmp.hasOwnProperty('level')) {
+            if (tmp.level === undefined) {
               tmp.level = 1
             }
             if (it.id === 'titlepage') {
