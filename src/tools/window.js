@@ -45,9 +45,9 @@ exports.createMainWindow = function(icon) {
 // 创建悬浮窗口
 exports.createViewWindow = function(params) {
   var win = new BrowserWindow({
-    width: 1024,
+    width: 1136,
     height: 768,
-    minWidth: 1024,
+    minWidth: 1136,
     minHeight: 768,
     // show: false,
     title: 'E-pub Reader',
