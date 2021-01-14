@@ -78,9 +78,17 @@ body {
     padding: 8px 24px;
 
     .detail {
+      width: 100%;
       max-width: 768px;
       line-height: 1.5;
       font-size: 14px;
+
+      .cover {
+        display: block;
+        width: 100%;
+        height: calc(100vh - 16px);
+        object-fit: contain;
+      }
 
       a {
         text-decoration: underline;

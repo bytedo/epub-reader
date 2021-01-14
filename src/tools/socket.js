@@ -63,6 +63,8 @@ module.exports = function(app, createViewWindow) {
           let { title } = eb.metadata
           let cover = ''
           let dir = path.join(CACHE_DIR, title)
+          let dict = {}
+          let toc = []
 
           function saveImage(id, name) {
             return new Promise(done => {
@@ -90,13 +92,12 @@ module.exports = function(app, createViewWindow) {
                     .replace(/<pre>/g, '<wc-code>')
                     .replace(/<\/pre>/g, '</wc-code>')
 
-                  htm = htm.replace(/<wc-code>([\w\W]*?)<\/wc-code>/g, function(
-                    m,
-                    s
-                  ) {
-                    s = s.replace(/<\/?\w+>/g, '')
-                    return `<wc-code>${s}</wc-code>`
-                  })
+                  htm = htm
+                    .replace(/<wc-code>([\w\W]*?)<\/wc-code>/g, function(m, s) {
+                      s = s.replace(/<\/?\w+>/g, '')
+                      return `<wc-code>${s}</wc-code>`
+                    })
+                    .trim()
 
                   fs.echo(htm, path.join(dir, name.replace('.xhtml', '.html')))
                 } else {
@@ -116,7 +117,10 @@ module.exports = function(app, createViewWindow) {
                 break
 
               case 'application/x-dtbncx+xml':
-                fs.echo(JSON.stringify(eb.toc), path.join(dir, 'toc.json'))
+                eb.toc.forEach(_ => {
+                  dict[_.id] = _
+                })
+
                 break
 
               case 'application/xhtml+xml':
@@ -133,6 +137,39 @@ module.exports = function(app, createViewWindow) {
                 break
             }
           }
+
+          toc = eb.flow.map((it, i) => {
+            let tmp = dict[it.id] || { level: i === 0 ? i : undefined }
+            if (!tmp.hasOwnProperty('level')) {
+              tmp.level = 1
+            }
+            if (it.id === 'titlepage') {
+              it.level = 0
+              it.title = '封面'
+            } else {
+              it.level = tmp.level
+              let cp
+
+              if (it.title) {
+                cp = it.title
+              } else {
+                cp = fs
+                  .cat(path.join(dir, it.href.replace('.xhtml', '.html')))
+                  .toString()
+                cp = cp.split(/[\r\n]/).shift()
+                cp = cp.replace(/<\/?[\w\-]+[^>]*?>/g, '').trim()
+              }
+
+              it.title = cp
+                .slice(0, 20)
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+            }
+            return it
+          })
+
+          fs.echo(JSON.stringify(toc), path.join(dir, 'toc.json'))
+
           if (!cover) {
             cover = 'cover.webp'
             app.__main__.webContents.send('app', {

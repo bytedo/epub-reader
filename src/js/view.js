@@ -88,15 +88,18 @@ Anot({
         fetch(`book://cache/${this.book}/${file}`)
           .then(r => r.text())
           .then(txt => {
-            this.chapter = txt.replace(
-              /<img[^>]*?src="(.*?)"[^>]*?\/?>/g,
-              (m, s1) => {
-                // s1 = s1.replace('../', '')
+            this.chapter = txt
+              .replace(/<img[^>]*?src="(.*?)"[^>]*?\/?>/g, (m, s1) => {
                 s1 = join(dirname(file), s1)
-                console.log(file, s1)
                 return `<img src="book://cache/${this.book}/${s1}">`
-              }
-            )
+              })
+              .replace(/<image[^>]*?xlink:href="(.*?)"[^>]*?\/?>/g, (m, s1) => {
+                s1 = join(dirname(file), s1)
+                return `<img class="cover" src="book://cache/${
+                  this.book
+                }/${s1}">`
+              })
+              .replace(/<\/?svg>/g, '')
 
             setTimeout(() => {
               if (hash) {
