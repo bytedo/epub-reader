@@ -4,14 +4,9 @@
  * @authors yutent (yutent.io@gmail.com)
  * @date    2014-10-10 00:45:09
  *
- * doui的CSS规范
+ * CSS规范
  * 
  * 不能出现大写,以连字符风格命名 
- * 表示状态的应该用do-st-*命名 
- * 表示功能的应该用do-fn-*命名
- * 表示页面模块的应该用do-mod-modname 命名
- * 表示UI组件的应该用do-uiname命名, 它的子元素应该全部包在 .do-uiname这个根类下
- * 如 .do-layer .body { ... }
  * 
  * 样式规则的出现顺序
  * 1 display float position overflow z-index 表示定位/布局的属性
@@ -22,57 +17,66 @@
  * 
  */
 
-
-* {margin: 0;padding: 0;vertical-align: baseline;box-sizing:border-box;}
-::before,::after {box-sizing:border-box;}
+* {margin: 0;padding: 0;vertical-align: baseline;box-sizing: border-box;}
+::before, ::after {box-sizing: border-box;}
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section,content {display: block;}
-img {border:0;display:inline-block;}
-ol, ul {list-style: none;}
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section,content {display: block;}
+img {border: 0;display: inline-block;}
+ol,ul {list-style: none;}
 blockquote, q {quotes: none;}
-blockquote::before, blockquote::after,
-q::before, q::after {content: '';content: none;}
+blockquote::before, blockquote::after, q::before, q::after {content: '';content: none;}
 table {border-collapse: collapse;border-spacing: 0;}
-a:focus,input,textarea,button:focus,input:focus,textarea:focus {outline:none;}
-::-moz-focus-inner {
-  border:none;outline:none;
-}
-body {font-family:"Helvetica Neue", Arial,"WenQuanYi Micro Hei","PingFang SC","Hiragino Sans GB","Segoe UI", "Microsoft Yahei", sans-serif;-webkit-font-smoothing: antialiased;text-size-adjust: 100%;-webkit-tap-highlight-color: transparent;}
-code,pre,samp {font-family:Menlo,Monaco,Consolas,"Courier New",monospace;}
-[anot],[\:repeat],[\:if] {visibility:hidden;}
+a:focus,input,textarea,button:focus,input:focus,textarea:focus {outline: none;}
+::-moz-focus-inner {border: none;outline: none;}
 
+body {font-family: 'Helvetica Neue', Arial, 'WenQuanYi Micro Hei', 'PingFang SC', 'Hiragino Sans GB', 'Segoe UI', 'Microsoft Yahei', sans-serif;-webkit-font-smoothing: antialiased;text-size-adjust: 100%;-webkit-tap-highlight-color: transparent;}
+code, pre, samp {font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;}
+[anot],[\:repeat],[\:if] {visibility: hidden;}
 
 .noselect {-webkit-touch-callout: none;-webkit-user-select: none;-moz-user-select: none;user-select: none;}
-.noselect img, .noselect a {-webkit-user-drag:none;}
-.text-ell {overflow:hidden; white-space:nowrap; text-overflow:ellipsis }
-.osx-thin {-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;}
+.noselect img, .noselect a {-webkit-user-drag: none;}
+.text-ell {overflow: hidden;white-space: nowrap;text-overflow: ellipsis;}
+.text-thin {-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;}
 
 :root {
-  --color-teal-1: #4db6ac;
-  --color-teal-2: #26a69a;
-  --color-teal-3: #009688;
-  --color-green-1: #81c784;
-  --color-green-2: #66bb6a;
-  --color-green-3: #4caf50;
-  --color-purple-1: #9575cd;
-  --color-purple-2: #9575cd;
-  --color-purple-3: #673ab7;
-  --color-blue-1: #64b5f6;
-  --color-blue-2: #42a5f5;
-  --color-blue-3: #2196f3;
-  --color-red-1: #ff5061;
-  --color-red-2: #eb3b48;
-  --color-red-3: #ce3742;
-  --color-orange-1: #ffb618;
-  --color-orange-2: #f39c12;
-  --color-orange-3: #e67e22;
-  --color-plain-1: #f2f5fc;
-  --color-plain-2: #e8ebf4;
-  --color-plain-3: #dae1e9;
-  --color-grey-1: #bdbdbd;
-  --color-grey-2: #9e9e9e;
-  --color-grey-3: #757575;
-  --color-dark-1: #62778d;
-  --color-dark-2: #526273;
-  --color-dark-3: #425064;
+  /* primary */
+  --color-teal-a: rgba(72, 201, 176, 0.5);
+  --color-teal-1: rgb(72, 201, 176);
+  --color-teal-2: rgb(26, 188, 156);
+  --color-teal-3: rgb(22, 160, 133);
+  /* success */
+  --color-green-a: rgba(88, 214, 141, 0.5);
+  --color-green-1: rgb(88, 214, 141);
+  --color-green-2: rgb(46, 204, 113);
+  --color-green-3: rgb(39, 173, 96);
+  /* info */
+  --color-blue-a: rgba(100, 181, 246, 0.5);
+  --color-blue-1: rgb(100, 181, 246);
+  --color-blue-2: rgb(66, 165, 245);
+  --color-blue-3: rgb(33, 150, 243);
+  /* danger */
+  --color-red-a: rgba(255, 107, 129, 0.5);
+  --color-red-1: rgb(255, 107, 129);
+  --color-red-2: rgb(255, 71, 87);
+  --color-red-3: rgb(230, 52, 67);
+  /* warning */
+  --color-orange-a: rgba(244, 211, 19, 0.5);
+  --color-orange-1: rgb(244, 211, 19);
+  --color-orange-2: rgb(241, 196, 15);
+  --color-orange-3: rgb(205, 167, 13);
+  /* default1 */
+  --color-plain-a: rgba(150, 204, 248, 0.5);
+  --color-plain-1: rgb(242, 245, 252);
+  --color-plain-2: rgb(232, 235, 244);
+  --color-plain-3: rgb(218, 225, 233);
+  /* default2 */
+  --color-grey-a: rgba(206, 214, 224, 0.5);
+  --color-grey-1: rgb(206, 214, 224);
+  --color-grey-2: rgb(164, 176, 190);
+  --color-grey-3: rgb(134, 144, 155);
+  /* inverse */
+  --color-dark-a: rgba(87, 96, 111, 0.5);
+  --color-dark-1: rgb(87, 96, 111);
+  --color-dark-2: rgb(52, 73, 94);
+  --color-dark-3: rgb(44, 62, 80);
 }
